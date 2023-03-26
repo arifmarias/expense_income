@@ -7,6 +7,7 @@ from streamlit_option_menu import option_menu
 from st_aggrid import AgGrid
 from st_aggrid.grid_options_builder import GridOptionsBuilder
 import database as db
+from streamlit_extras.switch_page_button import switch_page
 
 
 def interactive_df(data):
@@ -36,6 +37,9 @@ layout = "centered"
 # --------------------------------------
 
 st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
+home = st.button("HOME 🏠")
+if home:
+    switch_page("HOME")
 st.title(page_title + " " + page_icon)
 
 

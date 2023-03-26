@@ -8,6 +8,7 @@ import streamlit as st  # pip install streamlit
 from streamlit_option_menu import option_menu  # pip install streamlit-option-menu
 from st_aggrid import AgGrid
 from st_aggrid.grid_options_builder import GridOptionsBuilder
+from streamlit_extras.switch_page_button import switch_page
 
 import database as db  # local import
 
@@ -40,6 +41,9 @@ page_icon = ":money_with_wings:"  # emojis: https://www.webfx.com/tools/emoji-ch
 layout = "centered"
 # --------------------------------------
 st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
+home = st.button("HOME 🏠")
+if home:
+    switch_page("HOME")
 st.title(page_title + " " + page_icon)
 
 # --- HIDE STREAMLIT STYLE ---
