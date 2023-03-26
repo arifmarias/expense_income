@@ -141,7 +141,7 @@ if selected == "টিকার রিপোর্ট":
         # full_report = right_column.form_submit_button("ডিটেইল রিপোর্ট")
         if submitted:
             st.markdown("""---""")
-            st.write("ছাগল নম্বর AB- " + str(gt) + " -এর ভেকসিন/মেডিসিন ডিটেইল রিপোর্ট")
+            st.write("ছাগল নম্বর  AB- " + str(gt) + " -এর ভেকসিন/মেডিসিন ডিটেইল রিপোর্ট")
             vacc = db.fetch_all_periods_vaccination()
             df_vacc = pd.DataFrame(vacc)
             df_vacc_goat = df_vacc[df_vacc["goat_number"] == gt][["input_date", "reason", "med","med_measure","comment"]]
