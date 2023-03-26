@@ -7,9 +7,9 @@ from datetime import datetime
 
 
 # Load the environment variables
-# load_dotenv(".env")
-# DETA_KEY = os.getenv("DETA_KEY")
-DETA_KEY = st.secrets["DETA_KEY"]
+load_dotenv(".env")
+DETA_KEY = os.getenv("DETA_KEY")
+# DETA_KEY = st.secrets["DETA_KEY"]
 
 # Initialize with a project key
 deta = Deta(DETA_KEY)
@@ -18,6 +18,8 @@ deta = Deta(DETA_KEY)
 db_f = deta.Base("monthly_reports_fish")
 db_g = deta.Base("monthly_reports_goat")
 db_in = deta.Base("investment")
+db_vaccine = deta.Base("vaccination")
+db_goat = deta.Base("goat_info")
 
 
 # ---- Fish DB ----- 
@@ -62,3 +64,24 @@ def fetch_all_periods_invest():
     res = db_in.fetch()
     return res.items
 
+# ---- GOAT INFO DB ----- 
+# db.insert_period_invest(str(datetime.utcnow()), input_date, period, year_month, goat_number, breed,gender,color,purchase_or_birth,age,weight,purchase_price,comment)
+def insert_new_animal(current, input_date, period, year_month, goat_number, breed, gender, color, purchase_or_birth, age, weight, purchase_price, comment):
+    """Returns the report on a successful creation, otherwise raises an error"""
+    return db_goat.put({"key": current, "input_date": input_date, "period": period, "year_month": year_month, "goat_number": goat_number, "breed": breed, "gender":gender, "color":color, "purchase_or_birth":purchase_or_birth, "age":age, "weight":weight, "purchase_price":purchase_price, "comment": comment})
+
+def fetch_all_periods_animal():
+    """Returns a dict of all periods"""
+    res = db_goat.fetch()
+    return res.items
+
+# ---- VACCINATION DB ----- 
+# db.insert_new_vaccination(str(datetime.utcnow()), input_date, period, year_month, gt, reason, med, med_measure,comment)
+def insert_new_vaccination(current, input_date, period, year_month, goat_number, reason, med, med_measure, comment):
+    """Returns the report on a successful creation, otherwise raises an error"""
+    return db_vaccine.put({"key": current, "input_date": input_date, "period": period, "year_month": year_month, "goat_number": goat_number, "reason": reason, "med":med, "med_measure":med_measure, "comment": comment})
+
+def fetch_all_periods_vaccination():
+    """Returns a dict of all periods"""
+    res = db_vaccine.fetch()
+    return res.items
