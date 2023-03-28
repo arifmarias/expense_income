@@ -145,7 +145,7 @@ if selected == "টিকার রিপোর্ট":
         full_report = right_column.form_submit_button("ডিটেইল রিপোর্ট")
         if submitted:
             st.markdown("""---""")
-            st.write("ছাগল নম্বর  AB- " + str(gt) + " -এর ভেকসিন/মেডিসিন ডিটেইল রিপোর্ট")
+            st.write("ছাগল নম্বর  AB- " + str(gt) + " -এর ভেকসিন/মেডিসিন দেয়ার রিপোর্ট")
             vacc = db.fetch_all_periods_vaccination()
             df_vacc = pd.DataFrame(vacc)
             if not df_vacc.empty:
