@@ -148,12 +148,13 @@ if selected == "টিকার রিপোর্ট":
             st.write("ছাগল নম্বর  AB- " + str(gt) + " -এর ভেকসিন/মেডিসিন ডিটেইল রিপোর্ট")
             vacc = db.fetch_all_periods_vaccination()
             df_vacc = pd.DataFrame(vacc)
-            df_vacc_goat = df_vacc[df_vacc["goat_number"] == gt][["input_date", "reason", "med","med_measure","comment"]]
-            df_vacc_goat["input_date"] = pd.to_datetime(df_vacc_goat["input_date"], dayfirst=True)
-            df_vacc_goat = df_vacc_goat.sort_values("input_date", ascending=False)
-            df_vacc_goat["input_date"] = df_vacc_goat["input_date"].dt.strftime('%d/%m/%Y')
-            df_vacc_goat_rename = df_vacc_goat.rename(columns= {"input_date": "তারিখ", "reason":"উপসর্গ", "med":"ভেকসিন/মেডিসিন", "med_measure":"ভেকসিন/মেডিসিন-এর পরিমান", "comment":"বিবরণ"})
-            interactive_df(df_vacc_goat_rename)
+            if not df_vacc.empty:
+                df_vacc_goat = df_vacc[df_vacc["goat_number"] == gt][["input_date", "reason", "med","med_measure","comment"]]
+                df_vacc_goat["input_date"] = pd.to_datetime(df_vacc_goat["input_date"], dayfirst=True)
+                df_vacc_goat = df_vacc_goat.sort_values("input_date", ascending=False)
+                df_vacc_goat["input_date"] = df_vacc_goat["input_date"].dt.strftime('%d/%m/%Y')
+                df_vacc_goat_rename = df_vacc_goat.rename(columns= {"input_date": "তারিখ", "reason":"উপসর্গ", "med":"ভেকসিন/মেডিসিন", "med_measure":"ভেকসিন/মেডিসিন-এর পরিমান", "comment":"বিবরণ"})
+                interactive_df(df_vacc_goat_rename)
         if full_report:
             st.markdown("""---""")
             st.subheader("ছাগল নম্বর  AB- " + str(gt) + " -এর ডিটেইল রিপোর্ট")
