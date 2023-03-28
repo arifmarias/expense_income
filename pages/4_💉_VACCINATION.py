@@ -142,7 +142,7 @@ if selected == "টিকার রিপোর্ট":
         gt = int(gt.split("-")[1])
         left_column, right_column = st.columns(2)
         submitted = left_column.form_submit_button("রিপোর্ট")
-        # full_report = right_column.form_submit_button("ডিটেইল রিপোর্ট")
+        full_report = right_column.form_submit_button("ডিটেইল রিপোর্ট")
         if submitted:
             st.markdown("""---""")
             st.write("ছাগল নম্বর  AB- " + str(gt) + " -এর ভেকসিন/মেডিসিন ডিটেইল রিপোর্ট")
@@ -154,3 +154,35 @@ if selected == "টিকার রিপোর্ট":
             df_vacc_goat["input_date"] = df_vacc_goat["input_date"].dt.strftime('%d/%m/%Y')
             df_vacc_goat_rename = df_vacc_goat.rename(columns= {"input_date": "তারিখ", "reason":"উপসর্গ", "med":"ভেকসিন/মেডিসিন", "med_measure":"ভেকসিন/মেডিসিন-এর পরিমান", "comment":"বিবরণ"})
             interactive_df(df_vacc_goat_rename)
+        if full_report:
+            st.markdown("""---""")
+            st.subheader("ছাগল নম্বর  AB- " + str(gt) + " -এর ডিটেইল রিপোর্ট")
+            selected_gt = df_animal[df_animal["goat_number"] == gt]
+            if selected_gt["purchase_or_birth"].values[0] == "কেনা":
+                st.write("ছাগলটি কেনা হয়েছিল " + selected_gt["input_date"].values[0] + "  এবং ছাগলটির দাম : " + "৳ {:,.2f}".format(selected_gt["purchase_price"].values[0]))
+            with st.container():
+                left_column, right_column = st.columns(2)
+                left_column.write("এটা " + str(selected_gt["gender"].values[0]))
+                
+            with st.container():
+                left_column, right_column = st.columns(2)
+                left_column.write("ছাগলের বয়স:  " + str(selected_gt["age"].values[0]))
+                right_column.write("ছাগলের রঙ:  " + str(selected_gt["color"].values[0]))
+
+            with st.container():
+                left_column, right_column = st.columns(2)
+                left_column.write("প্রাথমিক ওজন: " + str(selected_gt["weight"].values[0]))
+                right_column.write("ছাগলের জাত:  " + str(selected_gt["breed"].values[0]))
+            
+            st.write("বিবরণ : " + selected_gt["comment"].values[0])
+            vacc = db.fetch_all_periods_vaccination()
+            df_vacc = pd.DataFrame(vacc)
+            df_vacc_goat = df_vacc[df_vacc["goat_number"] == gt][["input_date", "reason", "med","med_measure","comment"]]
+            df_vacc_goat["input_date"] = pd.to_datetime(df_vacc_goat["input_date"], dayfirst=True)
+            df_vacc_goat = df_vacc_goat.sort_values("input_date", ascending=False)
+            df_vacc_goat["input_date"] = df_vacc_goat["input_date"].dt.strftime('%d/%m/%Y')
+            df_vacc_goat_rename = df_vacc_goat.rename(columns= {"input_date": "তারিখ", "reason":"উপসর্গ", "med":"ভেকসিন/মেডিসিন", "med_measure":"ভেকসিন/মেডিসিন-এর পরিমান", "comment":"বিবরণ"})
+            df_vacc_goat_rename = df_vacc_goat_rename.head(1)
+            if not df_vacc_goat_rename.empty:
+                st.write("ছাগলটিকে শেষ " + df_vacc_goat_rename["তারিখ"].values[0]+"-তারিখে "+df_vacc_goat_rename["উপসর্গ"].values[0] +"-এর জন্য  "+ df_vacc_goat_rename["ভেকসিন/মেডিসিন"].values[0] + " টিকা/ঔষুধ দেয়া হয়েছিল")
+            
