@@ -169,12 +169,12 @@ if selected == "টিকার রিপোর্ট":
                 
             with st.container():
                 left_column, right_column = st.columns(2)
-                left_column.write("ছাগলের বয়স:  " + str(selected_gt["age"].values[0]))
+                left_column.write("ছাগলের বয়স:  " + str(selected_gt["age"].values[0]) + " মাস")
                 right_column.write("ছাগলের রঙ:  " + str(selected_gt["color"].values[0]))
 
             with st.container():
                 left_column, right_column = st.columns(2)
-                left_column.write("প্রাথমিক ওজন: " + str(selected_gt["weight"].values[0]))
+                left_column.write("প্রাথমিক ওজন: " + str(selected_gt["weight"].values[0]) + " কেজি")
                 right_column.write("ছাগলের জাত:  " + str(selected_gt["breed"].values[0]))
             
             st.write("বিবরণ : " + selected_gt["comment"].values[0])
