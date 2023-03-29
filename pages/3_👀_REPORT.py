@@ -14,7 +14,7 @@ import database as db  # local import
 
 def interactive_df(data):
    gb = GridOptionsBuilder.from_dataframe(data)
-   gb.configure_pagination(paginationAutoPageSize=True) #Add pagination
+   gb.configure_pagination(paginationAutoPageSize=False, paginationPageSize=10) #Add pagination
    gb.configure_side_bar() #Add a sidebar
    #gb.configure_selection('multiple', use_checkbox=True, groupSelectsChildren="Group checkbox select children") #Enable multi-row selection
    gridOptions = gb.build()
@@ -26,11 +26,11 @@ def interactive_df(data):
     fit_columns_on_grid_load=False,
     theme='streamlit', #Add theme color to the table
     enable_enterprise_modules=True,
-    height=350, 
+    # height=350, 
     width='100%',
     reload_data=True
     )
-   # data = grid_response['data']
+   data = grid_response['data']
    # AgGrid(data)
 
 
@@ -77,24 +77,31 @@ with st.form("saved_periods"):
     submitted = left_column.form_submit_button("রিপোর্ট")
     full_report = right_column.form_submit_button("ডিটেইল রিপোর্ট")
     if submitted:
+        items_1 = db.fetch_all_periods_invest()
+        df_invest = pd.DataFrame(items_1)
+        total_investment = df_invest[df_invest["cat_investment"]=="মাছ"]["amount"].sum()
         # ----- KPI ------------
         st.markdown("""---""")
         total_income = df_fish[df_fish["period"] == year]["incomes"].sum()
         total_expense = df_fish[df_fish["period"] == year]["expenses"].sum()
-        left_column, right_column = st.columns(2)
+        left_column, middle_column, right_column = st.columns(3)
         with left_column:
-            st.subheader("মোট আয়:")
+            st.subheader("মোট আয়")
             st.subheader(f"৳ {total_income:,}")
-        with right_column:
-            st.subheader("মোট ব্যায়:")
+        with middle_column:
+            st.subheader("মোট ব্যায়")
             st.subheader(f"৳ {total_expense:,}")
+        with right_column:
+            st.subheader("মোট বিনিয়োগ")
+            st.subheader(f"৳ {total_investment:,}")
         st.markdown("""---""")
 
         # ----- GROUPWISE TOTAL EXPENSE ------------
         df_fish_expense = df_fish[(df_fish["period"] == year) & (df_fish["expenses_cat"]!='null')]
         expense_by_categories = df_fish_expense.groupby(by=["expenses_cat"]).sum()[['expenses']].sort_values(by="expenses", ascending = False)
         fig_expense = px.pie(expense_by_categories, values='expenses', names=expense_by_categories.index, title="খাত অনুযায়ী ব্যায়")
-        
+        expense_by_month = df_fish_expense.groupby(by=["year_month"]).sum()[['expenses']].sort_values(by="expenses", ascending = False)
+        fig_expense_month = px.bar(expense_by_month, x=expense_by_month.index, y='expenses', title="মাস অনুযায়ী ব্যায়", labels={'year_month':'মাস', 'expenses':'খরচ'})
 
         # ----- GROUPWISE TOTAL INCOME ------------
         df_fish_income = df_fish[(df_fish["period"] == year) & (df_fish["incomes_cat"]!='null')]
@@ -111,6 +118,11 @@ with st.form("saved_periods"):
         left_column, right_column = st.columns(2)
         left_column.plotly_chart(fig_expense, use_container_width=True)
         right_column.plotly_chart(fig_income, use_container_width=True)
+        
+        # ----- BAR-CHART VIZ FOR INCOME AND EXPENSE ------------
+        #left_column, right_column = st.columns(2)
+        st.plotly_chart(fig_expense_month, use_container_width=True)
+        
     
     if full_report:
        # ----- DETAILS EXPENSE ------------
@@ -118,6 +130,9 @@ with st.form("saved_periods"):
        st.write(year + "- সালের ব্যায়র ডিটেইল রিপোর্ট")
        df_fish_expense_detail = df_fish[(df_fish["period"] == year) & (df_fish["expenses_cat"]!='null')]
        df_fish_expense_detail = df_fish_expense_detail[["input_date", "expenses_cat","expenses","comment"]]
+       df_fish_expense_detail["input_date"] = pd.to_datetime(df_fish_expense_detail["input_date"], dayfirst=True)
+       df_fish_expense_detail = df_fish_expense_detail.sort_values("input_date", ascending=False)
+       df_fish_expense_detail["input_date"] = df_fish_expense_detail["input_date"].dt.strftime('%d/%m/%Y')
        df_fish_expense_detail_rename = df_fish_expense_detail.rename(columns= {"input_date": "তারিখ", "expenses_cat":"ব্যায়র খাত", "expenses":"মোট টাকা", "comment":"বিবরণ"})
        interactive_df(df_fish_expense_detail_rename)
 
@@ -126,6 +141,9 @@ with st.form("saved_periods"):
        st.write(year + "- সালের আয়ের ডিটেইল রিপোর্ট")
        df_fish_income_detail = df_fish[(df_fish["period"] == year) & (df_fish["incomes_cat"]!='null')]
        df_fish_income_detail = df_fish_income_detail[["input_date", "incomes_cat","incomes","comment"]]
+       df_fish_income_detail["input_date"] = pd.to_datetime(df_fish_income_detail["input_date"], dayfirst=True)
+       df_fish_income_detail = df_fish_income_detail.sort_values("input_date", ascending=False)
+       df_fish_income_detail["input_date"] = df_fish_income_detail["input_date"].dt.strftime('%d/%m/%Y')
        df_fish_income_detail_rename = df_fish_income_detail.rename(columns= {"input_date": "তারিখ", "incomes_cat":"ব্যায়র খাত", "incomes":"মোট টাকা", "comment":"বিবরণ"})
        interactive_df(df_fish_income_detail_rename)
 
