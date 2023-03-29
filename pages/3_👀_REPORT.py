@@ -79,7 +79,7 @@ with st.form("saved_periods"):
     if submitted:
         items_1 = db.fetch_all_periods_invest()
         df_invest = pd.DataFrame(items_1)
-        total_investment = df_invest[df_invest["cat_investment"]=="মাছ"]["amount"].sum()
+        total_investment = df_invest[(df_invest["cat_investment"]=="মাছ") & (df_invest["period"]==year) ]["amount"].sum()
         # ----- KPI ------------
         st.markdown("""---""")
         total_income = df_fish[df_fish["period"] == year]["incomes"].sum()
@@ -167,7 +167,7 @@ with st.form("saved_periods_goat"):
     if submitted:
         items_1 = db.fetch_all_periods_invest()
         df_invest = pd.DataFrame(items_1)
-        total_investment = df_invest[df_invest["cat_investment"]=="ছাগল"]["amount"].sum()
+        total_investment = df_invest[(df_invest["cat_investment"]=="ছাগল") & (df_invest["period"]==year)]["amount"].sum()
         # ----- KPI ------------
         st.markdown("""---""")
         total_income = df_goat[df_goat["period"] == year]["incomes"].sum()
