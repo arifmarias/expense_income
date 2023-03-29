@@ -100,9 +100,9 @@ if selected == "ছাগলের হিসাব":
                     my_expense = val
                     # (current, period, year_month,  cat_income, incomes, cat_expenses, expenses, comment)
                     db.insert_period_goat(str(datetime.utcnow()), input_date, period, year_month, "null", 0, key, val, comment)
-            items = db.fetch_all_periods_goat()
-            df = pd.DataFrame(items)         
-            st.table(df)
+            # items = db.fetch_all_periods_goat()
+            # df = pd.DataFrame(items)         
+            # st.table(df)
             # st.session_state["goat"] = df
             # st.table(df2)
             st.success("Data saved!")
