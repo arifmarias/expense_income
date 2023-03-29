@@ -80,7 +80,7 @@ if selected == "নতুন ছাগল এন্ট্রি":
                 goat_num = int(goat_num)
             
             st.subheader("ছাগল নম্বর : AB-" + str(goat_num) )
-            breed = st.selectbox("জাত", options=("ব্ল্যাক বেঙ্গল ছাগল", "যমুনাপারি ছাগল", "বিটল ছাগল", "বোয়ার ছাগল", "বারবারি ছাগল"))
+            breed = st.selectbox("জাত", options=("ব্ল্যাক বেঙ্গল ছাগল", "যমুনাপারি ছাগল", "বিটল ছাগল", "তোতাপুরি ছাগল", "বোয়ার ছাগল", "বারবারি ছাগল"))
             gender = st.selectbox("জেন্ডার", options=("পুরুষ ছাগল", "মহিলা ছাগল"))
             color = st.text_input("রঙ")
             purchase_or_birth = st.selectbox("কেনা নাকি জন্ম?", options=("কেনা", "জন্ম"))
