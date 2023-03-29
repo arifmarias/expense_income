@@ -165,23 +165,31 @@ with st.form("saved_periods_goat"):
     submitted = left_column.form_submit_button("রিপোর্ট")
     full_report = right_column.form_submit_button("ডিটেইল রিপোর্ট")
     if submitted:
+        items_1 = db.fetch_all_periods_invest()
+        df_invest = pd.DataFrame(items_1)
+        total_investment = df_invest[df_invest["cat_investment"]=="ছাগল"]["amount"].sum()
         # ----- KPI ------------
         st.markdown("""---""")
         total_income = df_goat[df_goat["period"] == year]["incomes"].sum()
         total_expense = df_goat[df_goat["period"] == year]["expenses"].sum()
-        left_column, right_column = st.columns(2)
+        left_column, middle_column, right_column = st.columns(3)
         with left_column:
             st.subheader("মোট আয়:")
             st.subheader(f"৳ {total_income:,}")
-        with right_column:
-            st.subheader("মোট ব্যায়:")
+        with middle_column:
+            st.subheader("মোট ব্যায়")
             st.subheader(f"৳ {total_expense:,}")
+        with right_column:
+            st.subheader("মোট বিনিয়োগ")
+            st.subheader(f"৳ {total_investment:,}")
         st.markdown("""---""")
 
         # ----- GROUPWISE TOTAL EXPENSE ------------
         df_goat_expense = df_goat[(df_goat["period"] == year) & (df_goat["expenses_cat"]!='null')]
         expense_by_categories = df_goat_expense.groupby(by=["expenses_cat"]).sum()[['expenses']].sort_values(by="expenses", ascending = False)
         fig_expense = px.pie(expense_by_categories, values='expenses', names=expense_by_categories.index, title="খাত অনুযায়ী ব্যায়")
+        expense_by_month = df_goat_expense.groupby(by=["year_month"]).sum()[['expenses']].sort_values(by="expenses", ascending = False)
+        fig_expense_month = px.bar(expense_by_month, x=expense_by_month.index, y='expenses', title="মাস অনুযায়ী ব্যায়", labels={'year_month':'মাস', 'expenses':'খরচ'})
 
 
         # ----- GROUPWISE TOTAL INCOME ------------
@@ -199,6 +207,10 @@ with st.form("saved_periods_goat"):
         left_column, right_column = st.columns(2)
         left_column.plotly_chart(fig_expense, use_container_width=True)
         right_column.plotly_chart(fig_income, use_container_width=True)
+
+        # ----- BAR-CHART VIZ FOR INCOME AND EXPENSE ------------
+        #left_column, right_column = st.columns(2)
+        st.plotly_chart(fig_expense_month, use_container_width=True)
     
     if full_report:
        # ----- DETAILS EXPENSE ------------
