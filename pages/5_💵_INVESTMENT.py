@@ -90,7 +90,7 @@ if selected == "ইনভেস্টমেন্ট রিপোর্ট":
         items = db.fetch_all_periods_invest()
         df_invest = pd.DataFrame(items)
         # ----- SEARCHBOX ------------
-        period = df_invest["period"].unique()
+        period = df_invest["period"].drop_duplicates().sort_values(ascending=False)
         year = st.selectbox("সাল সিলেক্ট করুন", period)
         left_column, right_column = st.columns(2)
         submitted = left_column.form_submit_button("রিপোর্ট")

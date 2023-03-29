@@ -70,7 +70,7 @@ with st.form("saved_periods"):
     items = db.fetch_all_periods()
     df_fish = pd.DataFrame(items)
     # ----- SEARCHBOX ------------
-    period = df_fish["period"].unique()
+    period = df_fish["period"].drop_duplicates().sort_values(ascending=False)
     year = st.selectbox("সাল সিলেক্ট করুন", period)
     # ----- REPORT TYPE ------------
     left_column, right_column = st.columns(2)
@@ -157,7 +157,7 @@ with st.form("saved_periods_goat"):
     df_goat = pd.DataFrame(items)
 
     # ----- SEARCHBOX ------------
-    period = df_goat["period"].unique()
+    period = df_goat["period"].drop_duplicates().sort_values(ascending=False)
     year = st.selectbox("সাল সিলেক্ট করুন", period)
 
     # ----- REPORT TYPE ------------
