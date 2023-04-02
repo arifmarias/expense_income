@@ -230,5 +230,8 @@ with st.form("saved_periods_goat"):
        st.write(year + "- সালের আয়ের ডিটেইল রিপোর্ট")
        df_goat_income_detail = df_goat[(df_goat["period"] == year) & (df_goat["incomes_cat"]!='null')]
        df_goat_income_detail = df_goat_income_detail[["input_date", "incomes_cat","incomes","comment"]]
+       df_goat_income_detail["input_date"] = pd.to_datetime(df_goat_income_detail["input_date"], dayfirst=True)
+       df_goat_income_detail = df_goat_income_detail.sort_values("input_date", ascending=False)
+       df_goat_income_detail["input_date"] = df_goat_income_detail["input_date"].dt.strftime('%d/%m/%Y')
        df_goat_income_detail_rename = df_goat_income_detail.rename(columns= {"input_date": "তারিখ", "incomes_cat":"ব্যায়র খাত", "incomes":"মোট টাকা", "comment":"বিবরণ"})
        interactive_df(df_goat_income_detail_rename)
