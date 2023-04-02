@@ -218,6 +218,9 @@ with st.form("saved_periods_goat"):
        st.write(year + "- সালের ব্যায়র ডিটেইল রিপোর্ট")
        df_goat_expense_detail = df_goat[(df_goat["period"] == year) & (df_goat["expenses_cat"]!='null')]
        df_goat_expense_detail = df_goat_expense_detail[["input_date", "expenses_cat","expenses","comment"]]
+       df_goat_expense_detail["input_date"] = pd.to_datetime(df_goat_expense_detail["input_date"], dayfirst=True)
+       df_goat_expense_detail = df_goat_expense_detail.sort_values("input_date", ascending=False)
+       df_goat_expense_detail["input_date"] = df_goat_expense_detail["input_date"].dt.strftime('%d/%m/%Y')
        df_goat_expense_detail_rename = df_goat_expense_detail.rename(columns= {"input_date": "তারিখ", "expenses_cat":"ব্যায়র খাত", "expenses":"মোট টাকা", "comment":"বিবরণ"})
        interactive_df(df_goat_expense_detail_rename)
 
