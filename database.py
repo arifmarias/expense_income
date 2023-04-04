@@ -9,7 +9,7 @@ from datetime import datetime
 # Load the environment variables
 # load_dotenv(".env")
 # DETA_KEY = os.getenv("DETA_KEY")
-DETA_KEY = st.secrets["DETA_KEY"]
+# DETA_KEY = st.secrets["DETA_KEY"]
 
 # Initialize with a project key
 deta = Deta(DETA_KEY)
@@ -20,6 +20,7 @@ db_g = deta.Base("monthly_reports_goat")
 db_in = deta.Base("investment")
 db_vaccine = deta.Base("vaccination")
 db_goat = deta.Base("goat_info")
+db_self_cal = deta.Base("hero_calc")
 
 
 # ---- Fish DB ----- 
@@ -84,4 +85,16 @@ def insert_new_vaccination(current, input_date, period, year_month, goat_number,
 def fetch_all_periods_vaccination():
     """Returns a dict of all periods"""
     res = db_vaccine.fetch()
+    return res.items
+
+# ---- HERO DB ----- 
+# db.insert_period_invest(str(datetime.utcnow()), input_date, period, year_month, invest_amount, total_investment, spend_amount, total_spend, total_balance, comment)
+def insert_period_hero(current, input_date, period, year_month, invest_amount, total_investment, spend_amount, total_spend, total_balance, comment):
+    """Returns the report on a successful creation, otherwise raises an error"""
+    return db_self_cal.put({"key": current, "input_date": input_date, "period": period, "year_month": year_month, "invest_amount": invest_amount,"total_investment": total_investment, "spend_amount": spend_amount,"total_spend": total_spend, "total_balance":total_balance, "comment": comment})
+
+
+def fetch_all_periods_hero():
+    """Returns a dict of all periods"""
+    res = db_self_cal.fetch()
     return res.items

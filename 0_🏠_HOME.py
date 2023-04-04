@@ -63,6 +63,9 @@ with st.container():
 with st.container(): 
     left_column,right_column = st.columns(2)
     rep = left_column.button("REPORT ✨")
+    hero = right_column.button("HERO's 👨‍👩‍👧‍👦 TRACKER")
     if rep:
         switch_page("REPORT")
+    if hero:
+        switch_page("HERO TRACKER")
 st.markdown("""---""")
