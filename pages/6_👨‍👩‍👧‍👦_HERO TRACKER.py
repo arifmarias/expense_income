@@ -51,10 +51,10 @@ if selected == "বিনিয়োগ-ব্যায় এন্ট্রি":
     total_spend = 0
     "---"
     with st.form("entry_form", clear_on_submit=True):
-        with st.expander("বিনিয়োগ"):
+        with st.expander("বিনিয়োগ/পেয়েছি"):
             invest_amount = st.number_input("টাকার (৳) পরিমান", key="1")
         
-        with st.expander("ব্যায়"):
+        with st.expander("ব্যায়/দিয়েছি"):
             spend_amount = st.number_input("টাকার (৳) পরিমান", key="2")
 
         with st.expander("বিবরণ"):
