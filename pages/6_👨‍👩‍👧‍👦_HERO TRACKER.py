@@ -95,11 +95,22 @@ if selected == "বিনিয়োগ-ব্যায় রিপোর্ট":
     st.markdown("""---""")
     #st.subheader(year + "- সালের রিপোর্ট")
     if not df_hero.empty:
-        df_hero_report = df_hero[["input_date","comment","invest_amount","total_investment","spend_amount","total_spend","total_balance"]]
-        df_hero_report["input_date"] = pd.to_datetime(df_hero_report["input_date"], dayfirst=True)
-        df_hero_report = df_hero_report.sort_values("input_date", ascending=False)
-        df_hero_report["input_date"] = df_hero_report["input_date"].dt.strftime('%d/%m/%Y')
+        df_hero_report = df_hero[["key","input_date","comment","invest_amount","total_investment","spend_amount","total_spend","total_balance"]]
+        # df_hero_report["input_date"] = pd.to_datetime(df_hero_report["input_date"], dayfirst=True)
+        # df_hero_report = df_hero_report.sort_values("input_date", ascending=False)
+        df_hero_report = df_hero_report.sort_values("key", ascending=False)
+        # df_hero_report["input_date"] = df_hero_report["input_date"].dt.strftime('%d/%m/%Y')
+        df_hero_report = df_hero_report[["input_date","comment","invest_amount","total_investment","spend_amount","total_spend","total_balance"]]
         df_hero_report_rename = df_hero_report.rename(columns={"input_date": "তারিখ","comment":"বিবরণ","invest_amount":"পেয়েছি", "total_investment":"মোট পেয়েছি/বিনিয়োগ","spend_amount":"দিয়েছি","total_spend":"মোট দিয়েছি/ব্যায়","total_balance":"ব্যালান্স/অবশিষ্ট" })
+        col1, col2, col3 = st.columns(3)
+        tti = df_hero_report["total_investment"].values[0]
+        tte = df_hero_report["total_spend"].values[0]
+        ttb = df_hero_report["total_balance"].values[0]
+        col1.metric("মোট পেয়েছি ",f"৳ {tti:,}")
+        col2.metric("মোট দিয়েছি ",f"৳ {tte:,}")
+        col3.metric("অবশিষ্ট আছে ",f"৳ {ttb:,}")
+        st.markdown("""---""")
+        st.write(":sunglasses: :blue[ডিটেইল রিপোর্ট]")
         st.table(df_hero_report_rename)
     # with st.form("saved_periods"):
         
