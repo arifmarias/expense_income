@@ -17,6 +17,7 @@ deta = Deta(DETA_KEY)
 # This is how to create/connect a database
 db_f = deta.Base("monthly_reports_fish")
 db_g = deta.Base("monthly_reports_goat")
+db_m = deta.Base("monthly_reports_mill")
 db_in = deta.Base("investment")
 db_vaccine = deta.Base("vaccination")
 db_goat = deta.Base("goat_info")
@@ -38,6 +39,20 @@ def get_period(period):
     """If not found, the function will return None"""
     return db_f.get(period)
 
+# ---- Mill DB ----- 
+def insert_period_mill(current, input_date, period, year_month, cat_income, incomes, cat_expenses, expenses, comment):
+    """Returns the report on a successful creation, otherwise raises an error"""
+    return db_m.put({"key": current, "input_date": input_date, "period": period, "year_month": year_month, "incomes_cat": cat_income,"incomes": incomes, "expenses_cat": cat_expenses,"expenses": expenses, "comment": comment})
+
+
+def fetch_all_periods_mill():
+    """Returns a dict of all periods"""
+    res = db_m.fetch()
+    return res.items
+
+def get_period_mill(period):
+    """If not found, the function will return None"""
+    return db_m.get(period)
 # ---- Goat DB ----- 
 
 def insert_period_goat(current, input_date, period, year_month, cat_income, incomes, cat_expenses, expenses, comment):

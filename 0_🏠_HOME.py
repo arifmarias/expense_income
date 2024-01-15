@@ -25,6 +25,9 @@ customized_button = st.markdown("""
     div.stButton > button:first-child {
         background-color: #578a00;
         color:#ffffff;
+        height: auto;
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
     }
     div.stButton > button:hover {
         background-color: #00128a;
@@ -53,10 +56,10 @@ with st.container():
 
 with st.container(): 
     left_column, right_column = st.columns(2)
-    vac = left_column.button("VACCINATION 💉")
+    mill = left_column.button("MILL 🏭")
     inv = right_column.button("INVESTMENT 💵")
-    if vac:
-        switch_page("VACCINATION")
+    if mill:
+        switch_page("MILL")
     if inv:
         switch_page("INVESTMENT")
 
