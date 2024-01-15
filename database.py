@@ -104,9 +104,9 @@ def fetch_all_periods_vaccination():
 
 # ---- HERO DB ----- 
 # db.insert_period_invest(str(datetime.utcnow()), input_date, period, year_month, invest_amount, total_investment, spend_amount, total_spend, total_balance, comment)
-def insert_period_hero(current, input_date, period, year_month, invest_amount, total_investment, spend_amount, total_spend, total_balance, comment):
+def insert_period_hero(current, input_date, period, year_month, invest_cat, invest_amount, total_investment, spend_cat, spend_amount, total_spend, total_balance, comment):
     """Returns the report on a successful creation, otherwise raises an error"""
-    return db_self_cal.put({"key": current, "input_date": input_date, "period": period, "year_month": year_month, "invest_amount": invest_amount,"total_investment": total_investment, "spend_amount": spend_amount,"total_spend": total_spend, "total_balance":total_balance, "comment": comment})
+    return db_self_cal.put({"key": current, "input_date": input_date, "period": period, "year_month": year_month, "invest_cat": invest_cat, "invest_amount": invest_amount,"total_investment": total_investment, "spend_cat": spend_cat,"spend_amount": spend_amount,"total_spend": total_spend, "total_balance":total_balance, "comment": comment})
 
 
 def fetch_all_periods_hero():
