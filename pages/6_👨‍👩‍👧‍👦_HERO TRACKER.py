@@ -153,13 +153,21 @@ if selected == "বিনিয়োগ-ব্যায় রিপোর্ট":
         period = df_hero["period"].drop_duplicates().sort_values(ascending=False)
         year = st.selectbox("সাল সিলেক্ট করুন", period)
         st.markdown("""---""")
-        st.write(year + "- সালের ডিটেইল রিপোর্ট")
+        st.write(year + "- সালের ডিটেইল রিপোর্ট")       
         df_hero_detail = df_hero[df_hero["period"]==year]
         df_hero_select = df_hero_detail[["input_date","comment","invest_cat","invest_amount","spend_cat","spend_amount","total_balance"]]
         df_hero_select["input_date"] = pd.to_datetime(df_hero_select["input_date"], dayfirst=True)
         df_hero_select = df_hero_select.sort_values("input_date", ascending=False)
         df_hero_select["input_date"] = df_hero_select["input_date"].dt.strftime('%d/%m/%Y')
         df_hero_report_rename = df_hero_select.rename(columns={"input_date": "তারিখ","comment":"বিবরণ","invest_cat":"কিভাবে পেয়েছি","invest_amount":"পেয়েছি", "spend_cat":"কোথায় দিয়েছি","spend_amount":"দিয়েছি","total_balance":"ব্যালান্স/অবশিষ্ট" })
+        
+        # ----- YEAR-WISE TOTAL ------------
+        col1, col2 = st.columns(2)
+        period_wise_invest = df_hero_detail.groupby("period").sum()['invest_amount'].values[0]
+        period_wise_spend = df_hero_detail.groupby("period").sum()['spend_amount'].values[0]
+        col1.metric("পেয়েছি ", f"৳ {period_wise_invest:,}")
+        col2.metric("খরচ হয়েছে ", f"৳ {period_wise_spend:,}")
+        
         interactive_df(df_hero_report_rename)
         
         #st.table(df_hero_report_rename)
