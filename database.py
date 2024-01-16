@@ -53,6 +53,8 @@ def fetch_all_periods_mill():
 def get_period_mill(period):
     """If not found, the function will return None"""
     return db_m.get(period)
+
+
 # ---- Goat DB ----- 
 
 def insert_period_goat(current, input_date, period, year_month, cat_income, incomes, cat_expenses, expenses, comment):
