@@ -4,8 +4,37 @@ import pandas as pd
 import numpy as np
 import streamlit as st  # pip install streamlit
 from streamlit_option_menu import option_menu  # pip install streamlit-option-menu
+from st_aggrid import AgGrid
+from st_aggrid.grid_options_builder import GridOptionsBuilder
 from streamlit_extras.switch_page_button import switch_page
 import database as db  # local import
+
+# -------------- INTERACTIVE DATAFRAME --------------
+def interactive_df(data):
+   gb = GridOptionsBuilder.from_dataframe(data)
+   gb.configure_pagination(paginationAutoPageSize=False, paginationPageSize=10) #Add pagination
+   gb.configure_side_bar() #Add a sidebar
+   gb.configure_default_column(
+    resizable=True,
+    filterable=True,
+    sortable=True,
+    editable=False,
+    )
+   #gb.configure_selection('multiple', use_checkbox=True, groupSelectsChildren="Group checkbox select children") #Enable multi-row selection
+   gridOptions = gb.build()
+   grid_response = AgGrid(
+    data,
+    gridOptions=gridOptions,
+    data_return_mode='AS_INPUT', 
+    update_mode='MODEL_CHANGED', 
+    fit_columns_on_grid_load=False,
+    theme='streamlit', #Add theme color to the table
+    enable_enterprise_modules=True,
+    height=500, 
+    width='50%',
+    reload_data=True
+    )
+   data = grid_response['data']
 
 # -------------- SETTINGS --------------
 currency = "৳"
@@ -120,7 +149,20 @@ if selected == "বিনিয়োগ-ব্যায় রিপোর্ট":
         col3.metric("অবশিষ্ট আছে ",f"৳ {ttb:,}")
         st.markdown("""---""")
         st.write(":sunglasses: :blue[ডিটেইল রিপোর্ট]")
-        st.table(df_hero_report_rename)
+        # ----- SEARCHBOX ------------
+        period = df_hero["period"].drop_duplicates().sort_values(ascending=False)
+        year = st.selectbox("সাল সিলেক্ট করুন", period)
+        st.markdown("""---""")
+        st.write(year + "- সালের ডিটেইল রিপোর্ট")
+        df_hero_detail = df_hero[df_hero["period"]==year]
+        df_hero_select = df_hero_detail[["input_date","comment","invest_cat","invest_amount","spend_cat","spend_amount","total_balance"]]
+        df_hero_select["input_date"] = pd.to_datetime(df_hero_select["input_date"], dayfirst=True)
+        df_hero_select = df_hero_select.sort_values("input_date", ascending=False)
+        df_hero_select["input_date"] = df_hero_select["input_date"].dt.strftime('%d/%m/%Y')
+        df_hero_report_rename = df_hero_select.rename(columns={"input_date": "তারিখ","comment":"বিবরণ","invest_cat":"কিভাবে পেয়েছি","invest_amount":"পেয়েছি", "spend_cat":"কোথায় দিয়েছি","spend_amount":"দিয়েছি","total_balance":"ব্যালান্স/অবশিষ্ট" })
+        interactive_df(df_hero_report_rename)
+        
+        #st.table(df_hero_report_rename)
     # with st.form("saved_periods"):
         
         # ----- SEARCHBOX ------------
